@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { authContext } from "../Context/authContext";
 import { checking } from "../Authentication/authentication";
 import { Outlet } from "react-router-dom";
+import CreateProject from "../PopUpComponents/createProject";
 
 function HomePage() {
-  const { companyPopUp, setCompanyPopUp } = useContext(popUpContext);
+  const { companyPopUp, setCompanyPopUp,projectPopUp } = useContext(popUpContext);
   const navigate = useNavigate();
   const { setUser, user } = useContext(authContext);
 
@@ -36,6 +37,7 @@ function HomePage() {
       {/* Adjusted to flex-col for vertical alignment */}
       <NavBar />
       <div>{companyPopUp && <CreateCompany />}</div>
+      <div>{projectPopUp && <CreateProject/>}</div>
       <Outlet />
     </div>
   );

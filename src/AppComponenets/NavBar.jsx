@@ -3,6 +3,8 @@ import arrow from "../assets/NavBarAssets/arrow.svg";
 import { popUpContext } from "../Context/PopUpContext";
 import { authContext } from "../Context/authContext";
 import { getAllCompanies } from "../Authentication/company";
+import { Navigate } from "react-router-dom";
+import CompanyList from "../Components/CompanyList";
 
 function NavBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -80,13 +82,9 @@ function NavBar() {
           <p className="text-center p-4 text-red-500">Error: {error.message}</p>
         ) : companies.length > 0 ? (
           <ul className="p-4 space-y-2">
-            {companies.map(company => (
-              <li
-                key={company._id}
-                className="bg-gray-100 p-2 rounded shadow-sm"
-              >
-                {company.name} {/* Adjust according to your company object structure */}
-              </li>
+            {companies.map((company,i) => (
+   <CompanyList key = {i} companyName = {company.name} companyId={company.id}/>
+              
             ))}
           </ul>
         ) : (

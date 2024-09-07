@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     element: <HomePage />,
     children: [  
       {
-        path:"/company",
+        path:"/company/:companyId",
         element:<CompanyProjects/>
       }
     ],
@@ -26,7 +26,11 @@ const router = createBrowserRouter([
   {
     path:"/login",
     element:<LoginPage/>
-  }
+  },
+  {
+    path:"/Signup",
+    element:<SignUpPage/>
+  },  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
