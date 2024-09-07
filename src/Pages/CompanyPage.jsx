@@ -9,36 +9,64 @@ import { popUpContext } from '../Context/PopUpContext';
 const CompanyProjects = () => {
   const [Loading,setLoading] = useState(false)
 const {companyId} = useParams()
+const [Projects, setProjects] = useState([]);
 const [CompanyDetails,setCompanyDetails] = useState([{}])
 const {setProjectPopUp} = useContext(popUpContext)
 useEffect(()=>{
+  
   const fetchDetails = async () => {
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:8000/company/getCompanyDetails",{companyId},{ withCredentials: true });
-      console.log("res = ",res.data.data);
+      console.log("res = ",res.data.data[0].projects);
       setCompanyDetails(res.data.data); // Assuming res.data contains the list of companies
+      if (res.data.data[0].projects && res.data.data[0].projects.length > 0) {
+        await fetchProjects(res.data.data[0].projects);
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
+
   };
+
+
 fetchDetails()
 
 
 
-},[])
+},[companyId])
 
-
-    console.log("details",CompanyDetails[0])
-      const handleCreateProject = () => {
-
-        console.log('Create Project button clicked');
-        // Add logic to create a new project here
-      //  const res = axios.post("http:/localhost:8000/company/createProject")
+const fetchProjects=async(projects)=>{
+  try {
+    const projectDetails = await Promise.all(
+      projects.map(async (project) => {
       
-        };
+        const res = await axios.post(
+          `http://localhost:8000/company/${project.projectId}`,
+       
+        );
+        console.log("pr = ",res.data.data)
+        return res.data.data;
+      })
+    );
+    
+    const pro = projectDetails.map((p)=>(
+      {
+          projectId :p[0].projectId,
+      projectDescription:p[0].projectDescription,
+      projectName:p[0].projectName,
+      todos:p[0].todos
+    }))
+    setProjects([pro][0])
+
+  } catch (error) {
+    console.error('Error fetching project details:', error);
+  }
+}
+console.log(Projects)
+
     
   return (
     <div className="bg-white text-black p-6 rounded-lg shadow-lg w-full mx-auto">
@@ -52,22 +80,25 @@ fetchDetails()
       >
         Create Project
       </button>
-{!Loading&&CompanyDetails.length>0?(
-      <ul className="mt-6 space-y-4">
-  
-      {
-      CompanyDetails&&CompanyDetails.projects?.length>0?
-         (CompanyDetails.projects?.map((project) => {
-   <ProjectList projectName={project.name} projectDescription={project.description}/>
-}))
-  :<>No Projects</>    }
-    
-    </ul>
-)
-
-:<>loading........</>
-
-}
+      {!Loading && CompanyDetails.length > 0 ? (
+        <ul className="mt-6 space-y-4">
+          {Projects.length > 0 ? (
+            Projects.map((project, index) => (
+              <ProjectList
+              
+                key={index} // Adding key prop
+                ProjectId = {project.projectId}
+                projectName={project.projectName}
+                projectDescription={project.projectDescription}
+              />
+            ))
+          ) : (
+            <>No Projects</>
+          )}
+        </ul>
+      ) : (
+        <>loading........</>
+      )}
 </div>
   );
 };

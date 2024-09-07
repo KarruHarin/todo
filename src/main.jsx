@@ -10,6 +10,7 @@ import NavBar from "./AppComponenets/NavBar.jsx";
 import { PopUpContextProvider } from "./Context/PopUpContext.jsx";
 import { AuthProvider } from "./Context/authContext.jsx";
 import CompanyProjects from "./Pages/CompanyPage.jsx";
+import ProjectPage from "./Pages/ProjectPage.jsx";
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path:"/company/:companyId",
         element:<CompanyProjects/>
+      },
+      {
+        path:"/project/:projectId",
+        element:<ProjectPage/>
       }
     ],
   },
@@ -31,6 +36,8 @@ const router = createBrowserRouter([
     path:"/Signup",
     element:<SignUpPage/>
   },  
+
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

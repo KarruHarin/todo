@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { popUpContext } from '../Context/PopUpContext';
 
 const CreateCompany = () => {
@@ -21,6 +21,8 @@ const CreateCompany = () => {
       }, { withCredentials: true });
       setSuccess(true);
       setCompanyName('');
+      setCompanyPopUp(false)
+      window.location.reload()
       setTimeout(() => setCompanyPopUp(false), 2000); // Close modal after 2 seconds
     } catch (err) {
       if (err.response) {
@@ -37,6 +39,7 @@ const CreateCompany = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

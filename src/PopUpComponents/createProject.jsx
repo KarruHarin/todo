@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 const CreateProject = () => {
     const {companyId} = useParams()
   const [projectName, setprojectName] = useState('');
+  const [projectDescription, setprojectDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -65,6 +66,18 @@ console.log("companyId =", companyId)
             onChange={(e) => setprojectName(e.target.value)}
             disabled={loading}
           />
+      <label htmlFor="projectDescription" className="block text-black mb-1">
+            Project Description
+          </label>
+          <input
+            type="text"
+            id="projectDescription"
+            className="w-full p-2 mb-4 border border-black rounded"
+            value={projectDescription}
+            onChange={(e) => setprojectDescription(e.target.value)}
+            disabled={loading}
+          />
+
           <button
             type="submit"
             className="bg-black text-white px-4 py-2 rounded w-full"
