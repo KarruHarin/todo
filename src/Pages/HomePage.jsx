@@ -7,9 +7,10 @@ import { authContext } from "../Context/authContext";
 import { checking } from "../Authentication/authentication";
 import { Outlet } from "react-router-dom";
 import CreateProject from "../PopUpComponents/createProject";
+import JoinCompany from "../PopUpComponents/joinCompany";
 
 function HomePage() {
-  const { companyPopUp, setCompanyPopUp,projectPopUp } = useContext(popUpContext);
+  const { companyPopUp, setCompanyPopUp,projectPopUp,joinPopUp } = useContext(popUpContext);
   const navigate = useNavigate();
   const { setUser, user } = useContext(authContext);
 
@@ -38,6 +39,7 @@ function HomePage() {
       <NavBar />
       <div>{companyPopUp && <CreateCompany />}</div>
       <div>{projectPopUp && <CreateProject/>}</div>
+      <div>{joinPopUp && <JoinCompany/>}</div>
       <Outlet />
     </div>
   );

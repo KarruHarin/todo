@@ -29,8 +29,6 @@ fetchDetails()
 
 
 },[])
-
-
     console.log("details",CompanyDetails[0])
       const handleCreateProject = () => {
 
@@ -52,7 +50,7 @@ fetchDetails()
       >
         Create Project
       </button>
-{!Loading&&CompanyDetails.length>0?(
+{/* {!Loading&&CompanyDetails.length>0?(
       <ul className="mt-6 space-y-4">
   
       {
@@ -60,14 +58,14 @@ fetchDetails()
          (CompanyDetails.projects?.map((project) => {
    <ProjectList projectName={project.name} projectDescription={project.description}/>
 }))
-  :<>No Projects</>    }
+  :<>No Projects</> }
     
     </ul>
 )
 
 :<>loading........</>
 
-}
+} */}
 </div>
   );
 };

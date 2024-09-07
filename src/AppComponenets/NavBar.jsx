@@ -3,7 +3,6 @@ import arrow from "../assets/NavBarAssets/arrow.svg";
 import { popUpContext } from "../Context/PopUpContext";
 import { authContext } from "../Context/authContext";
 import { getAllCompanies } from "../Authentication/company";
-import { Navigate } from "react-router-dom";
 import CompanyList from "../Components/CompanyList";
 
 function NavBar() {
@@ -13,6 +12,7 @@ function NavBar() {
   const [error, setError] = useState(null);
 
   const { setCompanyPopUp } = useContext(popUpContext);
+  const {setJoinPopUp} = useContext(popUpContext);
   const { user } = useContext(authContext);
 
   const toggleSidebar = useCallback(() => {
@@ -25,11 +25,9 @@ function NavBar() {
         setLoading(true);
         try {
           const res = await getAllCompanies({ userId: user._id });
-          console.log(res);
-          setCompanies(res.data.data); // Assuming res.data contains the list of companies
+          setCompanies(res.data.data);
         } catch (error) {
           setError(error);
-          console.error(error);
         } finally {
           setLoading(false);
         }
@@ -41,68 +39,70 @@ function NavBar() {
 
   return (
     <div
-      className={`flex flex-col bg-white transition-all duration-300 relative ${
-        sidebarOpen ? 'w-52' : 'w-14'
-      }`}
-      style={{
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-      }}
+      className={`flex flex-col bg-white transition-all duration-300 ease-in-out relative ${
+        sidebarOpen ? 'w-52' : 'w-16'
+      } h-screen shadow-lg`}
     >
+      {/* Header */}
       <div
-        className="bg-black w-full h-12 relative flex items-center justify-between px-2"
-        style={{
-          borderRadius: "0px 20px 0px 0px",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-        }}
+        className="bg-black w-full h-14 flex items-center justify-between px-4 box-border"
+        style={{ borderRadius: "0px 20px 0px 0px" }}
       >
-        {sidebarOpen && <p className="text-white">{user.username}</p>}
-
+        {sidebarOpen && (
+          <p className="text-white font-semibold truncate">{user?.username}</p>
+        )}
         <img
           src={arrow}
-          className="cursor-pointer absolute right-0 transition-transform duration-300 rounded-lg"
+          className="cursor-pointer transform transition-transform duration-300"
           onClick={toggleSidebar}
           style={{ transform: sidebarOpen ? "rotate(180deg)" : "rotate(0deg)" }}
           alt="Toggle Sidebar"
         />
       </div>
+
+      {/* Company List Area */}
       <div
-        className={`w-full transition-transform duration-300 ${
-          sidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[-100%]'
-        }`}
-        style={{
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          backgroundColor: "#FDFDFD",
-          height: "calc(100vh - 48px)",
-          overflowY: 'auto',
-        }}
+        className={`flex transition-opacity duration-500 ${
+          sidebarOpen ? 'opacity-100' : 'opacity-0'
+        } flex-col justify-center w-full px-4`}
+        style={{ height: "50%", overflowY: "auto" }}
       >
+      <p className="p-2">My companies</p>
         {loading ? (
-          <p className="text-center p-4">Loading...</p>
+          <p className="text-center text-gray-500 py-4">Loading...</p>
         ) : error ? (
-          <p className="text-center p-4 text-red-500">Error: {error.message}</p>
+          <p className="text-center text-red-500 py-4">Error: {error.message}</p>
         ) : companies.length > 0 ? (
-          <ul className="p-4 space-y-2">
-            {companies.map((company,i) => (
-   <CompanyList key = {i} companyName = {company.name} companyId={company.id}/>
-              
+          <ul className="space-y-3">
+            {companies.map((company, i) => (
+              <CompanyList key={i} companyName={company.name} companyId={company.id} />
             ))}
           </ul>
         ) : (
-          <p className="text-center p-4">No companies found</p>
+          <p className="text-center text-gray-500 py-4">No companies found</p>
         )}
       </div>
 
-      <div
-        className="absolute bottom-0 w-full h-12 text-center"
-        style={{ backgroundColor: "black" }}
-      >
+      {/* Create Company Button */}
+      <div className="absolute bottom-0 w-full h-14 bg-gray-900 flex items-center justify-center">
         {sidebarOpen && (
+          <div className="flex ">
+
           <button
-            className="text-white text-center"
+            className="text-white font-medium hover:bg-gray-700 px-4 py-2 rounded"
             onClick={() => setCompanyPopUp(true)}
           >
             Create Company
           </button>
+          <button
+            className="text-white font-medium hover:bg-gray-700 px-4 py-2 rounded"
+            onClick={() => setJoinPopUp(true)}
+          >
+            Join Company
+          </button>
+
+          </div>
+          
         )}
       </div>
     </div>
