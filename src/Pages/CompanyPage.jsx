@@ -1,108 +1,125 @@
 import axios from 'axios';
-import React, { useContext, useEffect } from 'react';
-import { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAllCompanies } from '../Authentication/company';
 import ProjectList from '../Components/ProjectList';
 import { popUpContext } from '../Context/PopUpContext';
 
 const CompanyProjects = () => {
-  const [Loading,setLoading] = useState(false)
-const {companyId} = useParams()
-const [Projects, setProjects] = useState([]);
-const [CompanyDetails,setCompanyDetails] = useState([{}])
-const {setProjectPopUp} = useContext(popUpContext)
-useEffect(()=>{
-  
-  const fetchDetails = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:8000/company/getCompanyDetails",{companyId},{ withCredentials: true });
-      console.log("res = ",res.data.data[0].projects);
-      setCompanyDetails(res.data.data); // Assuming res.data contains the list of companies
-      if (res.data.data[0].projects && res.data.data[0].projects.length > 0) {
-        await fetchProjects(res.data.data[0].projects);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const [loading, setLoading] = useState(false);
+  const { companyId } = useParams();
+  const [projects, setProjects] = useState([]);
+  const [companyDetails, setCompanyDetails] = useState({});
+  const { setProjectPopUp } = useContext(popUpContext);
+  const { setCompanyId } = useContext(popUpContext);
+  const [copySuccess, setCopySuccess] = useState('');
 
+  useEffect(() => {
+    setCompanyId(companyId);
+    const fetchDetails = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.post("http://localhost:8000/company/getCompanyDetails", { companyId }, { withCredentials: true });
+        setProjects(res.data.data[0].projects);
+        console.log(projects);
+        
+        setCompanyDetails(res.data.data[0]);
+        console.log(companyDetails);
+        
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetails();
+  }, [companyId]);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(companyDetails.companyCode);
+    setCopySuccess('Copied to clipboard!');
+    setTimeout(() => setCopySuccess(''), 3000);
   };
 
-
-fetchDetails()
-
-
-
-},[companyId])
-
-const fetchProjects=async(projects)=>{
-  try {
-    const projectDetails = await Promise.all(
-      projects.map(async (project) => {
-      
-        const res = await axios.post(
-          `http://localhost:8000/company/${project.projectId}`,
-       
-        );
-        console.log("pr = ",res.data.data)
-        return res.data.data;
-      })
-    );
-    
-    const pro = projectDetails.map((p)=>(
-      {
-          projectId :p[0].projectId,
-      projectDescription:p[0].projectDescription,
-      projectName:p[0].projectName,
-      todos:p[0].todos
-    }))
-    setProjects([pro][0])
-
-  } catch (error) {
-    console.error('Error fetching project details:', error);
-  }
-}
-console.log(Projects)
-
-    
   return (
-    <div className="bg-white text-black p-6 rounded-lg shadow-lg w-full mx-auto">
-      <div className="border-b border-gray-700 pb-4 mb-4">
-        <h1 className="text-3xl font-bold">{CompanyDetails[0].companyName}</h1>
-        <p className="text-sm text-gray-400">{CompanyDetails[0].companyCode}</p>
+    <div className="bg-blue-50 text-gray-900 p-6 rounded-lg shadow-lg w-full mx-auto">
+      <div className="border-b border-gray-300 pb-4 mb-6">
+        {/* Company Name and Code */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">{companyDetails.companyName}</h1>
+            <div className="flex items-center mt-2">
+              <p className="text-sm text-gray-500">{companyDetails.companyCode}</p>
+              <button
+                onClick={handleCopyCode}
+                className="ml-3 text-blue-500 hover:text-blue-600 transition-colors duration-300"
+              >
+                Copy Code
+              </button>
+            </div>
+            {copySuccess && <p className="text-green-500 mt-2">{copySuccess}</p>}
+          </div>
+        </div>
+        {/* Info Message */}
+        <p className="text-sm text-gray-400 mt-2">
+          Share this code with your colleagues so they can join the company.
+        </p>
       </div>
-      <button
-        onClick={()=>setProjectPopUp(true)}
-        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-      >
-        Create Project
-      </button>
-      {!Loading && CompanyDetails.length > 0 ? (
+
+      {/* Create Project Button */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Projects</h2>
+        <button
+          onClick={() => setProjectPopUp(true)}
+          className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md"
+        >
+          + Create Project
+        </button>
+      </div>
+
+      {/* Project List or Loading */}
+      {!loading ? (
         <ul className="mt-6 space-y-4">
-          {Projects.length > 0 ? (
-            Projects.map((project, index) => (
+          {projects.length > 0 ? (
+            projects.map((project, index) => (
               <ProjectList
-              
-                key={index} // Adding key prop
-                ProjectId = {project.projectId}
+                key={index}
+                ProjectId={project.projectId}
                 projectName={project.projectName}
                 projectDescription={project.projectDescription}
               />
             ))
           ) : (
-            <>No Projects</>
+            <p className="text-gray-500 text-center">No projects found. Start by creating a new project.</p>
           )}
         </ul>
       ) : (
-        <>loading........</>
+        <div className="flex justify-center items-center mt-10">
+          <svg
+            className="animate-spin h-8 w-8 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            ></path>
+          </svg>
+        </div>
       )}
-</div>
+    </div>
   );
 };
 
 export default CompanyProjects;
-
-

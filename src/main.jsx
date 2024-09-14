@@ -11,6 +11,7 @@ import { PopUpContextProvider } from "./Context/PopUpContext.jsx";
 import { AuthProvider } from "./Context/authContext.jsx";
 import CompanyProjects from "./Pages/CompanyPage.jsx";
 import ProjectPage from "./Pages/ProjectPage.jsx";
+import Dashboard from "./Components/Dashboard.jsx";
 
 
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path:"/project/:projectId",
         element:<ProjectPage/>
+      },
+      {
+        path:"/dashboard",
+        element:<Dashboard/>
       }
     ],
   },

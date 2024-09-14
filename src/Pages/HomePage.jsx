@@ -8,9 +8,11 @@ import { checking } from "../Authentication/authentication";
 import { Outlet } from "react-router-dom";
 import CreateProject from "../PopUpComponents/createProject";
 import JoinCompany from "../PopUpComponents/joinCompany";
+import TaskPopUpComp  from "../PopUpComponents/TaskPopUp";
+import Dashboard from "../Components/Dashboard";
 
 function HomePage() {
-  const { companyPopUp, setCompanyPopUp,projectPopUp,joinPopUp } = useContext(popUpContext);
+  const { companyPopUp,projectPopUp,joinPopUp,TaskPopUp,projectId,companyId } = useContext(popUpContext);
   const navigate = useNavigate();
   const { setUser, user } = useContext(authContext);
 
@@ -40,9 +42,14 @@ function HomePage() {
       <div>{companyPopUp && <CreateCompany />}</div>
       <div>{projectPopUp && <CreateProject/>}</div>
       <div>{joinPopUp && <JoinCompany/>}</div>
+      <div>{TaskPopUp && <TaskPopUpComp  projectId={projectId}
+          companyId={companyId}/>}</div>
       <Outlet />
     </div>
+   
+    
   );
 }
 
 export default HomePage;
+ 

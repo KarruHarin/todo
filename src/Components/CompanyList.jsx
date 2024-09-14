@@ -10,7 +10,7 @@ function CompanyList({companyName,companyId}) {
     return (
         
         <li
-        className="bg-gray-100 p-2 rounded shadow-sm cursor-pointer hover:bg-black hover:text-white truncate"
+        className="bg-gray-100 p-2 rounded shadow-sm cursor-pointer hover:bg-blue-900 hover:text-white truncate"
         onClick={onClick}
       >
         {companyName} {/* Adjust according to your company object structure */}
