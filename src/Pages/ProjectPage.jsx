@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { popUpContext } from '../Context/PopUpContext';
 import axios from 'axios';
-import TaskCard from '../Components/TodosList'; // Import the TaskCard component
+import TaskCard from '../Components/TodosList';
+import { setCookie } from '../cookie';
+ // Import the TaskCard component
 
 function ProjectPage() {
   const [loading, setLoading] = useState(false);
@@ -13,10 +15,11 @@ function ProjectPage() {
   const { setProjectId } = useContext(popUpContext);
   const { companyId, updated } = useContext(popUpContext);
 
-  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     setProjectId(projectId);
+    setCookie("projectId",projectId,1)
+    
 
     const fetchDetails = async () => {
       setLoading(true);

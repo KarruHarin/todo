@@ -12,6 +12,7 @@ import { AuthProvider } from "./Context/authContext.jsx";
 import CompanyProjects from "./Pages/CompanyPage.jsx";
 import ProjectPage from "./Pages/ProjectPage.jsx";
 import Dashboard from "./Components/Dashboard.jsx";
+import CompanyTaskPage from "./Pages/CompanyTaskPage.jsx";
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path:"/dashboard",
         element:<Dashboard/>
+      },
+      {
+        path:"/work/company/:companyId",
+        element:<CompanyTaskPage/>
       }
     ],
   },

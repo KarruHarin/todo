@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState, useCallback } from "react";
 import arrow from "../assets/NavBarAssets/arrow.svg";
 import { popUpContext } from "../Context/PopUpContext";
 import { authContext } from "../Context/authContext";
-import { getAllCompanies } from "../Authentication/company";
+import { getAllCompanies, getAllJoinedCompanies } from "../Authentication/company";
 import CompanyList from "../Components/CompanyList";
 import { useNavigate } from "react-router-dom";
+import JoinedCompanyList from "../Components/JoinedCompanyList";
 
 function NavBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,7 +34,9 @@ function NavBar() {
         setLoading(true);
         try {
           const res = await getAllCompanies({ userId: user._id });
+          const res2= await getAllJoinedCompanies({userId: user._id});
           setCompanies(res.data.data);
+          setJoinedCompanies(res2.data.data);
         } catch (error) {
           setError(error);
         } finally {
@@ -114,7 +117,7 @@ function NavBar() {
                   <p className="text-red-500 text-sm">Error: {error.message}</p>
                 ) : joinedCompanies.length > 0 ? (
                   joinedCompanies.map((company, i) => (
-                    <CompanyList key={i} companyName={company.name} companyId={company.id} />
+                    <JoinedCompanyList key={i} companyName={company.name} companyId={company.id} />
                   ))
                 ) : (
                   <p className="text-gray-400 text-sm">No companies found</p>

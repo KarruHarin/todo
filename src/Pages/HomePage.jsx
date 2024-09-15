@@ -10,11 +10,16 @@ import CreateProject from "../PopUpComponents/createProject";
 import JoinCompany from "../PopUpComponents/joinCompany";
 import TaskPopUpComp  from "../PopUpComponents/TaskPopUp";
 import Dashboard from "../Components/Dashboard";
+import { getCookie } from "../cookie";
+
 
 function HomePage() {
-  const { companyPopUp,projectPopUp,joinPopUp,TaskPopUp,projectId,companyId } = useContext(popUpContext);
+  const { companyPopUp,projectPopUp,joinPopUp,TaskPopUp} = useContext(popUpContext);
   const navigate = useNavigate();
   const { setUser, user } = useContext(authContext);
+  const projectId = getCookie("projectId");
+  const companyId = getCookie("companyId");
+
 
   useEffect(() => {
     const check = async () => {

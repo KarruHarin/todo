@@ -18,7 +18,10 @@ const TaskPopUpComp = ({ projectId, companyId }) => {
     const fetchWorkers = async () => {
       try {
         const response = await axios.post("http://localhost:8000/company/getWorkers", { companyId }, { withCredentials: true });
-        setUsers(response.data.data); // Assuming response.data contains user objects like { _id, name }
+        console.log(response.data.data);
+        
+        setUsers(response.data.data); 
+        // Assuming response.data contains user objects like { _id, name }
       } catch (error) {
         console.error("Unable to retrieve workers", error);
       }
@@ -156,7 +159,7 @@ const TaskPopUpComp = ({ projectId, companyId }) => {
             >
               <option value="">Select Assignee</option>
               {users.map((user) => (
-                <option key={user._id} value={user._id}>
+                <option key={user.id} value={user.id}>
                   {user.name}
                 </option>
               ))}

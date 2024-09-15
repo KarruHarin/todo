@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getAllCompanies } from '../Authentication/company';
 import ProjectList from '../Components/ProjectList';
 import { popUpContext } from '../Context/PopUpContext';
-
+import { setCookie } from '../cookie';
 const CompanyProjects = () => {
   const [loading, setLoading] = useState(false);
   const { companyId } = useParams();
@@ -16,6 +16,7 @@ const CompanyProjects = () => {
 
   useEffect(() => {
     setCompanyId(companyId);
+    setCookie("companyId",companyId,1)
     const fetchDetails = async () => {
       setLoading(true);
       try {
