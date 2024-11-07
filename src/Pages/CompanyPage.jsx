@@ -81,7 +81,7 @@ const CompanyProjects = () => {
 
       {/* Project List or Loading */}
       {!loading ? (
-        <ul className="mt-6 space-y-4">
+        <ul className="mt-6 space-y-4 ">
           {projects.length > 0 ? (
             projects.map((project, index) => (
               <ProjectList
